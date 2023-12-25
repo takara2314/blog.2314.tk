@@ -3,7 +3,7 @@ import type { cdate } from 'cdate';
 export interface ArticleInfo {
   id: string;
   title: string;
-  slug: string;
+  slug: string[];
   description: string;
   tags: string[];
   publishedAt: cdate.CDate;

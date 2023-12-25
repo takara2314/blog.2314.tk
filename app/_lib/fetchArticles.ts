@@ -64,7 +64,7 @@ export async function fetchArticleInfo(
 }
 
 export async function getArticleIdBySlug(
-  slug: string,
+  slug: string[],
 ): Promise<ArticleInfo | null> {
   const articles: ArticleInfo[] = [];
 
@@ -75,7 +75,7 @@ export async function getArticleIdBySlug(
         {
           property: 'Slug',
           rich_text: {
-            equals: slug,
+            equals: `/${slug.join('/')}`,
           },
         },
         {
@@ -108,7 +108,7 @@ export async function getArticleIdBySlug(
 }
 
 export async function fetchArticleBySlug(
-  slug: string,
+  slug: string[],
 ): Promise<Article | null> {
   const articleInfo = await getArticleIdBySlug(slug);
   if (!articleInfo) {

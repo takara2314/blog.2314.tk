@@ -31,36 +31,49 @@ import type {
 export function parseArticleInfo(
   page: PageObjectResponse | GetPageResponse,
 ): ArticleInfo {
+  const id = page.id;
+  // @ts-ignore
+  const title = page.properties.Title.title[0].plain_text;
+
+  const slug_str =
+    // @ts-ignore
+    page.properties.Slug.rich_text[0].plain_text;
+  const slug = slug_str.replace('/', '').split('/');
+
+  const description =
+    // @ts-ignore
+    page.properties.Description.rich_text[0].plain_text;
+
+  // @ts-ignore
+  const tags = page.properties.Tags.multi_select.map(
+    (tag: {
+      id: string;
+      name: string;
+      color: string;
+    }) => tag.name,
+  );
+
+  const publishedAt = cdate(
+    // @ts-ignore
+    page.properties.PublishedAt.date.start,
+  );
+  const updatedAt = cdate(
+    // @ts-ignore
+    page.properties.UpdatedAt.last_edited_time,
+  );
+
+  // @ts-ignore
+  const published = page.properties.Published.checkbox;
+
   return {
     id: page.id,
-    title:
-      // @ts-ignore
-      page.properties.Title.title[0].plain_text ?? '',
-    slug:
-      // @ts-ignore
-      page.properties.Slug.rich_text[0].plain_text ?? '',
-    description:
-      // @ts-ignore
-      page.properties.Description.rich_text[0].plain_text ??
-      '',
-    tags:
-      //@ts-ignore
-      page.properties.Tags.multi_select.map(
-        (tag: {
-          id: string;
-          name: string;
-          color: string;
-        }) => tag.name,
-      ) ?? [],
-    publishedAt:
-      // @ts-ignore
-      cdate(page.properties.PublishedAt.date.start),
-    updatedAt:
-      // @ts-ignore
-      cdate(page.properties.UpdatedAt.last_edited_time),
-    published:
-      // @ts-ignore
-      page.properties.Published.checkbox ?? false,
+    title,
+    slug,
+    description,
+    tags,
+    publishedAt,
+    updatedAt,
+    published,
   };
 }
 
