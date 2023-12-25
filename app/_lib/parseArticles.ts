@@ -10,6 +10,7 @@ import type {
   ArticleInfo,
   BackgroundColor,
   Block,
+  CheckboxListItem,
   Color,
   ColorWithBackgroundNotion,
   Heading1,
@@ -69,7 +70,7 @@ export function parseBlocks(
   const blocks: Block[] = [];
 
   let prevBlockIsUnorderedList = false;
-  let unorderedList: ListItem[] = [];
+  let unorderedList: (ListItem | CheckboxListItem)[] = [];
   let prevBlockIsOrderedList = false;
   let orderedList: ListItem[] = [];
 
@@ -79,6 +80,14 @@ export function parseBlocks(
 
     if (blockType === 'bulleted_list_item') {
       unorderedList.push(parseBlock(block) as ListItem);
+      prevBlockIsUnorderedList = true;
+      continue;
+    }
+
+    if (blockType === 'to_do') {
+      unorderedList.push(
+        parseBlock(block) as CheckboxListItem,
+      );
       prevBlockIsUnorderedList = true;
       continue;
     }
@@ -132,10 +141,10 @@ export function parseBlock(
       return parseUnorderedListItem(block);
     case 'numbered_list_item':
       return parseOrderedListItem(block);
+    case 'to_do':
+      return parseCheckboxListItem(block);
     case 'quote':
       return parseQuote(block);
-    // case 'to_do':
-    // 	break;
     default:
       // 'toggle' and 'child_page', 'unsupported' are not supported
       return {
@@ -336,6 +345,24 @@ function parseOrderedListItem(
   block: PartialBlockObjectResponse | BlockObjectResponse,
 ): ListItem {
   return parseListItem(block, 'numbered_list_item');
+}
+
+function parseCheckboxListItem(
+  block: PartialBlockObjectResponse | BlockObjectResponse,
+): CheckboxListItem {
+  const spans = [];
+
+  // @ts-ignore
+  for (const span of block.to_do.rich_text) {
+    spans.push(parseSpan(span as SpanNotion));
+  }
+
+  return {
+    type: 'checkbox_list_item',
+    spans,
+    // @ts-ignore
+    checked: block.to_do.checked,
+  };
 }
 
 function parseQuote(

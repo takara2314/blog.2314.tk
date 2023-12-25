@@ -24,8 +24,8 @@ export type Block =
   | UnorderedList
   | OrderedList
   | ListItem
-  | Quote
-  | ToDo;
+  | CheckboxListItem
+  | Quote;
 
 export interface Paragraph {
   type: 'paragraph';
@@ -54,7 +54,7 @@ export interface Image {
 
 export interface UnorderedList {
   type: 'unordered_list';
-  items: ListItem[];
+  items: (ListItem | CheckboxListItem)[];
 }
 
 export interface OrderedList {
@@ -65,6 +65,12 @@ export interface OrderedList {
 export interface ListItem {
   type: 'list_item';
   spans: Span[];
+}
+
+export interface CheckboxListItem {
+  type: 'checkbox_list_item';
+  spans: Span[];
+  checked: boolean;
 }
 
 export interface Quote {
