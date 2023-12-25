@@ -17,12 +17,10 @@ import type {
   Heading3,
   Image,
   ListItem,
-  Orderedlist,
   Paragraph,
   Span,
   SpanNotion,
   Style,
-  UnorderedList,
 } from '../_models/article';
 
 export function parseArticleInfo(
@@ -61,6 +59,59 @@ export function parseArticleInfo(
   };
 }
 
+export function parseBlocks(
+  blocksUnparsed: (
+    | PartialBlockObjectResponse
+    | BlockObjectResponse
+  )[],
+): Block[] {
+  const blocks: Block[] = [];
+
+  let prevBlockIsUnorderedList = false;
+  let unorderedList: ListItem[] = [];
+  let prevBlockIsOrderedList = false;
+  let orderedList: ListItem[] = [];
+
+  for (const block of blocksUnparsed) {
+    // @ts-ignore
+    const blockType: string = block.type;
+
+    if (blockType === 'bulleted_list_item') {
+      unorderedList.push(parseBlock(block) as ListItem);
+      prevBlockIsUnorderedList = true;
+      continue;
+    }
+
+    if (prevBlockIsUnorderedList) {
+      blocks.push({
+        type: 'unordered_list',
+        items: unorderedList,
+      });
+      unorderedList = [];
+      prevBlockIsUnorderedList = false;
+    }
+
+    if (blockType === 'numbered_list_item') {
+      orderedList.push(parseBlock(block) as ListItem);
+      prevBlockIsOrderedList = true;
+      continue;
+    }
+
+    if (prevBlockIsOrderedList) {
+      blocks.push({
+        type: 'ordered_list',
+        items: orderedList,
+      });
+      orderedList = [];
+      prevBlockIsOrderedList = false;
+    }
+
+    blocks.push(parseBlock(block));
+  }
+
+  return blocks;
+}
+
 export function parseBlock(
   block: PartialBlockObjectResponse | BlockObjectResponse,
 ): Block {
@@ -76,10 +127,10 @@ export function parseBlock(
       return parseHeading3(block);
     case 'image':
       return parseImage(block);
-    // case 'unordered_list':
-    // 	return parseUnorderedList(block);
-    // case 'ordered_list':
-    // 	return parseOrderedList(block);
+    case 'bulleted_list_item':
+      return parseUnorderedListItem(block);
+    case 'numbered_list_item':
+      return parseOrderedListItem(block);
     // case 'quote':
     // 	break;
     // case 'to_do':
@@ -91,6 +142,8 @@ export function parseBlock(
     // case 'unsupported':
     //   break;
     default:
+      // // @ts-ignore
+      // console.log(block.type);
       return {
         type: 'paragraph',
         spans: [],
@@ -260,4 +313,33 @@ function parseImage(
     // @ts-ignore
     src: block.image.file.url,
   };
+}
+
+function parseListItem(
+  block: PartialBlockObjectResponse | BlockObjectResponse,
+  blockType: string,
+): ListItem {
+  const spans = [];
+
+  // @ts-ignore
+  for (const span of block[blockType].rich_text) {
+    spans.push(parseSpan(span as SpanNotion));
+  }
+
+  return {
+    type: 'list_item',
+    spans,
+  };
+}
+
+function parseUnorderedListItem(
+  block: PartialBlockObjectResponse | BlockObjectResponse,
+): ListItem {
+  return parseListItem(block, 'bulleted_list_item');
+}
+
+function parseOrderedListItem(
+  block: PartialBlockObjectResponse | BlockObjectResponse,
+): ListItem {
+  return parseListItem(block, 'numbered_list_item');
 }

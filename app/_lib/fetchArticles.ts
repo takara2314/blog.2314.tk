@@ -1,10 +1,14 @@
 import { Client } from '@notionhq/client';
-import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
+import type {
+  BlockObjectResponse,
+  PageObjectResponse,
+  PartialBlockObjectResponse,
+} from '@notionhq/client/build/src/api-endpoints';
 
 import { ArticleInfo } from '../_models/article';
 import {
   parseArticleInfo,
-  parseBlock,
+  parseBlocks,
 } from './parseArticles';
 
 const notion = new Client({
@@ -46,7 +50,10 @@ export async function fetchArticleInfos(): Promise<
 }
 
 export async function fetchArticle(pageId: string) {
-  const blocks = [];
+  const blocksUnparsed: (
+    | PartialBlockObjectResponse
+    | BlockObjectResponse
+  )[] = [];
   let cursor;
 
   while (true) {
@@ -56,9 +63,7 @@ export async function fetchArticle(pageId: string) {
         block_id: pageId,
       });
 
-    for (const block of results) {
-      blocks.push(parseBlock(block));
-    }
+    blocksUnparsed.push(...results);
 
     if (!next_cursor) {
       break;
@@ -66,7 +71,10 @@ export async function fetchArticle(pageId: string) {
     cursor = next_cursor;
   }
 
+  const blocks = parseBlocks(blocksUnparsed);
+
   // TODO: remove
+  // console.log(JSON.stringify(blocksUnparsed, null, 2));
   console.log(JSON.stringify(blocks, null, 2));
 
   return blocks;

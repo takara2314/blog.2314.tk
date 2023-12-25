@@ -22,7 +22,8 @@ export type Block =
   | Heading3
   | Image
   | UnorderedList
-  | Orderedlist;
+  | OrderedList
+  | ListItem;
 
 export interface Paragraph {
   type: 'paragraph';
@@ -54,14 +55,14 @@ export interface UnorderedList {
   items: ListItem[];
 }
 
-export interface Orderedlist {
+export interface OrderedList {
   type: 'ordered_list';
   items: ListItem[];
 }
 
 export interface ListItem {
   type: 'list_item';
-  item: Block;
+  spans: Span[];
 }
 
 export interface SpanNotion {
