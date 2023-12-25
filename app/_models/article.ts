@@ -23,7 +23,9 @@ export type Block =
   | Image
   | UnorderedList
   | OrderedList
-  | ListItem;
+  | ListItem
+  | Quote
+  | ToDo;
 
 export interface Paragraph {
   type: 'paragraph';
@@ -63,6 +65,17 @@ export interface OrderedList {
 export interface ListItem {
   type: 'list_item';
   spans: Span[];
+}
+
+export interface Quote {
+  type: 'quote';
+  spans: Span[];
+}
+
+export interface ToDo {
+  type: 'to_do';
+  spans: Span[];
+  checked: boolean;
 }
 
 export interface SpanNotion {

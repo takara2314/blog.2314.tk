@@ -74,8 +74,8 @@ export async function fetchArticle(pageId: string) {
   const blocks = parseBlocks(blocksUnparsed);
 
   // TODO: remove
-  // console.log(JSON.stringify(blocksUnparsed, null, 2));
-  console.log(JSON.stringify(blocks, null, 2));
+  console.log(JSON.stringify(blocksUnparsed, null, 2));
+  // console.log(JSON.stringify(blocks, null, 2));
 
   return blocks;
 }

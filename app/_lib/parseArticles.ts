@@ -18,6 +18,7 @@ import type {
   Image,
   ListItem,
   Paragraph,
+  Quote,
   Span,
   SpanNotion,
   Style,
@@ -131,19 +132,12 @@ export function parseBlock(
       return parseUnorderedListItem(block);
     case 'numbered_list_item':
       return parseOrderedListItem(block);
-    // case 'quote':
-    // 	break;
+    case 'quote':
+      return parseQuote(block);
     // case 'to_do':
     // 	break;
-    // case 'toggle':
-    //   break;
-    // case 'child_page':
-    //   break;
-    // case 'unsupported':
-    //   break;
     default:
-      // // @ts-ignore
-      // console.log(block.type);
+      // 'toggle' and 'child_page', 'unsupported' are not supported
       return {
         type: 'paragraph',
         spans: [],
@@ -342,4 +336,20 @@ function parseOrderedListItem(
   block: PartialBlockObjectResponse | BlockObjectResponse,
 ): ListItem {
   return parseListItem(block, 'numbered_list_item');
+}
+
+function parseQuote(
+  block: PartialBlockObjectResponse | BlockObjectResponse,
+): Quote {
+  const spans = [];
+
+  // @ts-ignore
+  for (const span of block.quote.rich_text) {
+    spans.push(parseSpan(span as SpanNotion));
+  }
+
+  return {
+    type: 'quote',
+    spans,
+  };
 }
