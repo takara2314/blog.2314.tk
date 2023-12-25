@@ -1,5 +1,6 @@
 import type {
   BlockObjectResponse,
+  GetPageResponse,
   PageObjectResponse,
   PartialBlockObjectResponse,
 } from '@notionhq/client/build/src/api-endpoints';
@@ -28,7 +29,7 @@ import type {
 } from '../_models/article';
 
 export function parseArticleInfo(
-  page: PageObjectResponse,
+  page: PageObjectResponse | GetPageResponse,
 ): ArticleInfo {
   return {
     id: page.id,

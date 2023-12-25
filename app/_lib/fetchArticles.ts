@@ -5,7 +5,7 @@ import type {
   PartialBlockObjectResponse,
 } from '@notionhq/client/build/src/api-endpoints';
 
-import { ArticleInfo } from '../_models/article';
+import { Article, ArticleInfo } from '../_models/article';
 import {
   parseArticleInfo,
   parseBlocks,
@@ -49,13 +49,89 @@ export async function fetchArticleInfos(): Promise<
   return articles;
 }
 
-export async function fetchArticle(pageId: string) {
+export async function fetchArticleInfo(
+  pageId: string,
+): Promise<ArticleInfo | null> {
+  try {
+    const page = await notion.pages.retrieve({
+      page_id: pageId,
+    });
+
+    return parseArticleInfo(page);
+  } catch (_) {
+    return null;
+  }
+}
+
+export async function getArticleIdBySlug(
+  slug: string,
+): Promise<ArticleInfo | null> {
+  const articles: ArticleInfo[] = [];
+
+  const res = await notion.databases.query({
+    database_id: process.env.NOTION_DATABASE_ID ?? '',
+    filter: {
+      and: [
+        {
+          property: 'Slug',
+          rich_text: {
+            equals: slug,
+          },
+        },
+        {
+          property: 'Published',
+          checkbox: {
+            equals: true,
+          },
+        },
+      ],
+    },
+    sorts: [
+      {
+        property: 'PublishedAt',
+        direction: 'descending',
+      },
+    ],
+  });
+
+  for (const page of res.results) {
+    articles.push(
+      parseArticleInfo(page as PageObjectResponse),
+    );
+  }
+
+  if (articles.length === 0) {
+    return null;
+  }
+
+  return articles[0];
+}
+
+export async function fetchArticleBySlug(
+  slug: string,
+): Promise<Article | null> {
+  const articleInfo = await getArticleIdBySlug(slug);
+  if (!articleInfo) {
+    return null;
+  }
+
+  return await fetchArticle(articleInfo.id);
+}
+
+export async function fetchArticle(
+  pageId: string,
+): Promise<Article> {
   const blocksUnparsed: (
     | PartialBlockObjectResponse
     | BlockObjectResponse
   )[] = [];
-  let cursor;
 
+  const info = await fetchArticleInfo(pageId);
+  if (!info) {
+    throw new Error('Article not found');
+  }
+
+  let cursor;
   while (true) {
     const { results, next_cursor } =
       await notion.blocks.children.list({
@@ -73,9 +149,8 @@ export async function fetchArticle(pageId: string) {
 
   const blocks = parseBlocks(blocksUnparsed);
 
-  // TODO: remove
-  // console.log(JSON.stringify(blocksUnparsed, null, 2));
-  console.log(JSON.stringify(blocks, null, 2));
-
-  return blocks;
+  return {
+    blocks,
+    ...info,
+  };
 }

@@ -1,11 +1,7 @@
-import {
-  fetchArticle,
-  fetchArticleInfos,
-} from './_lib/fetchArticles';
+import { fetchArticleBySlug } from './_lib/fetchArticles';
 
 export default async function Home() {
-  const articles = await fetchArticleInfos();
-  const page = await fetchArticle(articles[0].id);
+  const article = await fetchArticleBySlug('/test');
 
   return (
     <main>
