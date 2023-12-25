@@ -17,6 +17,7 @@ import type {
   Heading1,
   Heading2,
   Heading3,
+  HorizontalRule,
   Image,
   ListItem,
   Paragraph,
@@ -148,8 +149,8 @@ export function parseBlock(
       return parseQuote(block);
     case 'callout':
       return parseCallout(block);
-    // case 'divider':
-    //   return parseDivider(block);
+    case 'divider':
+      return parseHorizontalRule(block);
     default:
       // 'toggle' and 'child_page', 'unsupported' are not supported
       return {
@@ -405,5 +406,13 @@ function parseCallout(
       // @ts-ignore
       block.callout.color as ColorWithBackgroundNotion,
     ),
+  };
+}
+
+function parseHorizontalRule(
+  block: PartialBlockObjectResponse | BlockObjectResponse,
+): HorizontalRule {
+  return {
+    type: 'horizontal_rule',
   };
 }

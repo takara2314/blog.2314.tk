@@ -26,7 +26,8 @@ export type Block =
   | ListItem
   | CheckboxListItem
   | Quote
-  | Callout;
+  | Callout
+  | HorizontalRule;
 
 export interface Paragraph {
   type: 'paragraph';
@@ -107,6 +108,10 @@ export interface CalloutIconFile {
   file: {
     url: string;
   };
+}
+
+export interface HorizontalRule {
+  type: 'horizontal_rule';
 }
 
 export interface SpanNotion {
