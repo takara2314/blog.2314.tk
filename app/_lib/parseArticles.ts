@@ -10,6 +10,7 @@ import type {
   ArticleInfo,
   BackgroundColor,
   Block,
+  Callout,
   CheckboxListItem,
   Color,
   ColorWithBackgroundNotion,
@@ -145,6 +146,10 @@ export function parseBlock(
       return parseCheckboxListItem(block);
     case 'quote':
       return parseQuote(block);
+    case 'callout':
+      return parseCallout(block);
+    // case 'divider':
+    //   return parseDivider(block);
     default:
       // 'toggle' and 'child_page', 'unsupported' are not supported
       return {
@@ -378,5 +383,27 @@ function parseQuote(
   return {
     type: 'quote',
     spans,
+  };
+}
+
+function parseCallout(
+  block: PartialBlockObjectResponse | BlockObjectResponse,
+): Callout {
+  const spans = [];
+
+  // @ts-ignore
+  for (const span of block.callout.rich_text) {
+    spans.push(parseSpan(span as SpanNotion));
+  }
+
+  return {
+    type: 'callout',
+    spans,
+    // @ts-ignore
+    icon: block.callout.icon,
+    backgroundColor: parseBackgroundColor(
+      // @ts-ignore
+      block.callout.color as ColorWithBackgroundNotion,
+    ),
   };
 }

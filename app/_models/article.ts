@@ -25,7 +25,8 @@ export type Block =
   | OrderedList
   | ListItem
   | CheckboxListItem
-  | Quote;
+  | Quote
+  | Callout;
 
 export interface Paragraph {
   type: 'paragraph';
@@ -77,11 +78,35 @@ export interface Quote {
   type: 'quote';
   spans: Span[];
 }
-
-export interface ToDo {
-  type: 'to_do';
+export interface Callout {
+  type: 'callout';
   spans: Span[];
-  checked: boolean;
+  icon: CalloutIcon;
+  backgroundColor: BackgroundColor;
+}
+
+export type CalloutIcon =
+  | CalloutIconEmoji
+  | CalloutIconExternal
+  | CalloutIconFile;
+
+export interface CalloutIconEmoji {
+  type: 'emoji';
+  emoji: string;
+}
+
+export interface CalloutIconExternal {
+  type: 'external';
+  external: {
+    url: string;
+  };
+}
+
+export interface CalloutIconFile {
+  type: 'file';
+  file: {
+    url: string;
+  };
 }
 
 export interface SpanNotion {
