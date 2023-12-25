@@ -1,4 +1,4 @@
-<header align="center">
+<section align="center">
 <a href="https://github.com/takara2314/blog.2314.tk">
     <img src="./public/favicon.svg" width="128" height="128" alt="logo" />
 </a>
@@ -9,7 +9,7 @@
 ![Framework: Next.js](https://img.shields.io/badge/Framework-Next.js-000000?style=for-the-badge&logo=next.js)
 ![License: MIT](https://img.shields.io/badge/License-MIT-a31f34?style=for-the-badge)
 
-</header>
+</section>
 
 タカラーン(takara2314)のブログです
 
@@ -21,8 +21,8 @@
 
 [Takara Hamaguchi](https://github.com/takara2314)
 
-<footer align="center">
+<section align="center">
 <small>
 © 2023 Takara Hamaguchi
 </small>
-</footer>
+</section>
