@@ -13,6 +13,7 @@ import type {
   Block,
   Callout,
   CheckboxListItem,
+  Code,
   Color,
   ColorWithBackgroundNotion,
   Heading1,
@@ -111,6 +112,7 @@ export function parseBlocks(
     if (prevBlockIsUnorderedList) {
       blocks.push({
         type: 'unordered_list',
+        id: block.id,
         items: unorderedList,
       });
       unorderedList = [];
@@ -126,6 +128,7 @@ export function parseBlocks(
     if (prevBlockIsOrderedList) {
       blocks.push({
         type: 'ordered_list',
+        id: block.id,
         items: orderedList,
       });
       orderedList = [];
@@ -163,12 +166,15 @@ export function parseBlock(
       return parseQuote(block);
     case 'callout':
       return parseCallout(block);
+    case 'code':
+      return parseCode(block);
     case 'divider':
       return parseHorizontalRule(block);
     default:
       // 'toggle' and 'child_page', 'unsupported' are not supported
       return {
         type: 'paragraph',
+        id: block.id,
         spans: [],
       };
   }
@@ -258,6 +264,7 @@ function parseSpan(spanNotion: SpanNotion): Span {
   };
 
   return {
+    id: spanNotion.id,
     text: spanNotion.plain_text,
     link: spanNotion.href,
     style,
@@ -276,6 +283,7 @@ function parseParagraph(
 
   return {
     type: 'paragraph',
+    id: block.id,
     spans,
   };
 }
@@ -292,6 +300,7 @@ function parseHeading1(
 
   return {
     type: 'heading_1',
+    id: block.id,
     text: texts.join(''),
   };
 }
@@ -308,6 +317,7 @@ function parseHeading2(
 
   return {
     type: 'heading_2',
+    id: block.id,
     text: texts.join(''),
   };
 }
@@ -324,6 +334,7 @@ function parseHeading3(
 
   return {
     type: 'heading_3',
+    id: block.id,
     text: texts.join(''),
   };
 }
@@ -333,8 +344,20 @@ function parseImage(
 ): Image {
   return {
     type: 'image',
+    id: block.id,
     // @ts-ignore
     src: block.image.file.url,
+    // @ts-ignore
+    alt:
+      // @ts-ignore
+      block.image.caption.length === 0
+        ? null
+        : // @ts-ignore
+          block.image.caption[0].plain_text,
+    expiryTime: cdate(
+      // @ts-ignore
+      block.image.file.expiry_time,
+    ),
   };
 }
 
@@ -351,6 +374,7 @@ function parseListItem(
 
   return {
     type: 'list_item',
+    id: block.id,
     spans,
   };
 }
@@ -379,6 +403,7 @@ function parseCheckboxListItem(
 
   return {
     type: 'checkbox_list_item',
+    id: block.id,
     spans,
     // @ts-ignore
     checked: block.to_do.checked,
@@ -397,6 +422,7 @@ function parseQuote(
 
   return {
     type: 'quote',
+    id: block.id,
     spans,
   };
 }
@@ -413,6 +439,7 @@ function parseCallout(
 
   return {
     type: 'callout',
+    id: block.id,
     spans,
     // @ts-ignore
     icon: block.callout.icon,
@@ -423,10 +450,24 @@ function parseCallout(
   };
 }
 
+function parseCode(
+  block: PartialBlockObjectResponse | BlockObjectResponse,
+): Code {
+  return {
+    type: 'code',
+    id: block.id,
+    // @ts-ignore
+    code: block.code.rich_text[0].plain_text,
+    // @ts-ignore
+    language: block.code.language,
+  };
+}
+
 function parseHorizontalRule(
   block: PartialBlockObjectResponse | BlockObjectResponse,
 ): HorizontalRule {
   return {
     type: 'horizontal_rule',
+    id: block.id,
   };
 }
