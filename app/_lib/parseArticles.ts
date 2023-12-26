@@ -338,6 +338,17 @@ function parseImage(
     type: 'image',
     // @ts-ignore
     src: block.image.file.url,
+    // @ts-ignore
+    alt:
+      // @ts-ignore
+      block.image.caption.length === 0
+        ? null
+        : // @ts-ignore
+          block.image.caption[0].plain_text,
+    expiryTime: cdate(
+      // @ts-ignore
+      block.image.file.expiry_time,
+    ),
   };
 }
 

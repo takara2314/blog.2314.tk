@@ -53,6 +53,8 @@ export interface Heading3 {
 export interface Image {
   type: 'image';
   src: string;
+  alt?: string;
+  expiryTime: cdate.CDate;
 }
 
 export interface UnorderedList {
