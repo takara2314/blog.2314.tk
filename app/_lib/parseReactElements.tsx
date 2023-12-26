@@ -37,7 +37,9 @@ export function parseReactElement(
       return <h3>{block.text}</h3>;
 
     case 'image':
-      return <img src={block.src} alt="" />;
+      return (
+        <img src={block.src} alt={block.alt ?? undefined} />
+      );
 
     case 'unordered_list':
       return (
