@@ -32,26 +32,31 @@ export type Block =
 
 export interface Paragraph {
   type: 'paragraph';
+  id: string;
   spans: Span[];
 }
 
 export interface Heading1 {
   type: 'heading_1';
+  id: string;
   text: string;
 }
 
 export interface Heading2 {
   type: 'heading_2';
+  id: string;
   text: string;
 }
 
 export interface Heading3 {
   type: 'heading_3';
+  id: string;
   text: string;
 }
 
 export interface Image {
   type: 'image';
+  id: string;
   src: string;
   alt?: string;
   expiryTime: cdate.CDate;
@@ -59,31 +64,37 @@ export interface Image {
 
 export interface UnorderedList {
   type: 'unordered_list';
+  id: string;
   items: (ListItem | CheckboxListItem)[];
 }
 
 export interface OrderedList {
   type: 'ordered_list';
+  id: string;
   items: ListItem[];
 }
 
 export interface ListItem {
   type: 'list_item';
+  id: string;
   spans: Span[];
 }
 
 export interface CheckboxListItem {
   type: 'checkbox_list_item';
+  id: string;
   spans: Span[];
   checked: boolean;
 }
 
 export interface Quote {
   type: 'quote';
+  id: string;
   spans: Span[];
 }
 export interface Callout {
   type: 'callout';
+  id: string;
   spans: Span[];
   icon: CalloutIcon;
   backgroundColor: BackgroundColor;
@@ -91,6 +102,7 @@ export interface Callout {
 
 export interface Code {
   type: 'code';
+  id: string;
   code: string;
   language: string;
 }
@@ -121,10 +133,12 @@ export interface CalloutIconFile {
 
 export interface HorizontalRule {
   type: 'horizontal_rule';
+  id: string;
 }
 
 export interface SpanNotion {
   type: 'text';
+  id: string;
   text: {
     content: string;
     link?: string;
@@ -142,6 +156,7 @@ export interface SpanNotion {
 }
 
 export interface Span {
+  id: string;
   text: string;
   link?: string;
   style: Style;
