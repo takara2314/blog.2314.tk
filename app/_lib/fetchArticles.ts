@@ -5,6 +5,7 @@ import type {
   PartialBlockObjectResponse,
 } from '@notionhq/client/build/src/api-endpoints';
 
+import { cdate } from 'cdate';
 import { Article, ArticleInfo } from '../_models/article';
 import {
   parseArticleInfo,
@@ -24,6 +25,12 @@ export async function fetchArticleInfos(): Promise<
     database_id: process.env.NOTION_DATABASE_ID ?? '',
     filter: {
       and: [
+        {
+          property: 'PublishedAt',
+          date: {
+            on_or_before: cdate().format(),
+          },
+        },
         {
           property: 'Published',
           checkbox: {
@@ -76,6 +83,12 @@ export async function getArticleIdBySlug(
           property: 'Slug',
           rich_text: {
             equals: `/${slug.join('/')}`,
+          },
+        },
+        {
+          property: 'PublishedAt',
+          date: {
+            on_or_before: cdate().format(),
           },
         },
         {
