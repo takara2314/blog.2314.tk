@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import CodeBlock from '../_components/CodeBlock';
 import { Block } from '../_models/article';
 
 export function parseReactElements(
@@ -80,6 +81,14 @@ export function parseReactElement(
             <span key={span.id}>{span.text}</span>
           ))}
         </aside>
+      );
+
+    case 'code':
+      return (
+        <CodeBlock
+          code={block.code}
+          language={block.language}
+        />
       );
 
     case 'horizontal_rule':
