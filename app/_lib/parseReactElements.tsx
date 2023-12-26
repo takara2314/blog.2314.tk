@@ -21,7 +21,7 @@ export function parseReactElement(
       return (
         <p>
           {block.spans.map((span) => (
-            <span>{span.text}</span>
+            <span key={span.id}>{span.text}</span>
           ))}
         </p>
       );
@@ -42,9 +42,9 @@ export function parseReactElement(
       return (
         <ul>
           {block.items.map((item) => (
-            <li>
+            <li key={item.id}>
               {item.spans.map((span) => (
-                <span>{span.text}</span>
+                <span key={span.id}>{span.text}</span>
               ))}
             </li>
           ))}
@@ -55,9 +55,9 @@ export function parseReactElement(
       return (
         <ol>
           {block.items.map((item) => (
-            <li>
+            <li key={item.id}>
               {item.spans.map((span) => (
-                <span>{span.text}</span>
+                <span key={span.id}>{span.text}</span>
               ))}
             </li>
           ))}
@@ -68,7 +68,7 @@ export function parseReactElement(
       return (
         <blockquote>
           {block.spans.map((span) => (
-            <span>{span.text}</span>
+            <span key={span.id}>{span.text}</span>
           ))}
         </blockquote>
       );
@@ -77,7 +77,7 @@ export function parseReactElement(
       return (
         <aside>
           {block.spans.map((span) => (
-            <span>{span.text}</span>
+            <span key={span.id}>{span.text}</span>
           ))}
         </aside>
       );
