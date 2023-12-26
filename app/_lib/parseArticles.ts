@@ -13,6 +13,7 @@ import type {
   Block,
   Callout,
   CheckboxListItem,
+  Code,
   Color,
   ColorWithBackgroundNotion,
   Heading1,
@@ -163,6 +164,8 @@ export function parseBlock(
       return parseQuote(block);
     case 'callout':
       return parseCallout(block);
+    case 'code':
+      return parseCode(block);
     case 'divider':
       return parseHorizontalRule(block);
     default:
@@ -420,6 +423,18 @@ function parseCallout(
       // @ts-ignore
       block.callout.color as ColorWithBackgroundNotion,
     ),
+  };
+}
+
+function parseCode(
+  block: PartialBlockObjectResponse | BlockObjectResponse,
+): Code {
+  return {
+    type: 'code',
+    // @ts-ignore
+    code: block.code.rich_text[0].plain_text,
+    // @ts-ignore
+    language: block.code.language,
   };
 }
 

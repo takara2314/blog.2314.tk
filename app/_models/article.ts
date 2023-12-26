@@ -27,6 +27,7 @@ export type Block =
   | CheckboxListItem
   | Quote
   | Callout
+  | Code
   | HorizontalRule;
 
 export interface Paragraph {
@@ -84,6 +85,12 @@ export interface Callout {
   spans: Span[];
   icon: CalloutIcon;
   backgroundColor: BackgroundColor;
+}
+
+export interface Code {
+  type: 'code';
+  code: string;
+  language: string;
 }
 
 export type CalloutIcon =
