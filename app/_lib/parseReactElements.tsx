@@ -44,6 +44,14 @@ export function parseReactElement(
         <ul>
           {block.items.map((item) => (
             <li key={item.id}>
+              {'checked' in item && (
+                <input
+                  type="checkbox"
+                  checked={item.checked}
+                  readOnly
+                />
+              )}
+
               {item.spans.map((span) => (
                 <span key={span.id}>{span.text}</span>
               ))}
