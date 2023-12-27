@@ -37,10 +37,10 @@ export default async function ExternalPicture(
 
   return (
     <picture {...parentProps}>
-      <source
+      {/* <source
         srcSet={optimizedPcImages.avif}
         type="image/avif"
-      />
+      /> */}
       <source
         srcSet={optimizedPcImages.webp}
         type="image/webp"
