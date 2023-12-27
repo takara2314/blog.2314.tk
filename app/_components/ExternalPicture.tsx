@@ -1,85 +1,27 @@
-import AsyncLock from 'async-lock';
-import optimizeExternalImage from '../_lib/optimizeExternalImage';
-
-interface Props {
+export interface Props {
   src: string;
   alt?: string;
   optimized?: boolean;
 }
 
-const lock = new AsyncLock();
+export type ActualProps = Props &
+  Omit<
+    React.HTMLAttributes<HTMLPictureElement>,
+    'src' | 'alt' | 'optimized'
+  >;
 
 export default async function ExternalPicture(
-  props: Props &
-    Omit<
-      React.HTMLAttributes<HTMLPictureElement>,
-      'src' | 'alt' | 'optimized'
-    >,
+  props: ActualProps,
 ) {
-  const { src, alt, ...parentProps } = props;
+  let PictureComponent;
 
-  if (!props.optimized) {
-    return (
-      <picture {...parentProps}>
-        <img src={props.src} alt={props.alt} />
-      </picture>
-    );
+  if (process.env.NODE_ENV === 'production') {
+    PictureComponent =
+      require('./ExternalPictureProduction').default;
+  } else {
+    PictureComponent =
+      require('./ExternalPictureDevelopment').default;
   }
 
-  const optimizedPcImages = await lock.acquire(
-    'optimize-external-image',
-    async () => {
-      return await optimizeExternalImage(src, 700, 70);
-    },
-  );
-
-  // const optimizedSpImages = await lock.acquire(
-  //   'optimize-external-image',
-  //   async () => {
-  //     return await optimizeExternalImage(src, 400, 70);
-  //   },
-  // );
-
-  return (
-    <picture {...parentProps}>
-      <source
-        srcSet={optimizedPcImages.avif}
-        type="image/avif"
-      />
-      <source
-        srcSet={optimizedPcImages.avif}
-        type="image/webp"
-      />
-      <img src={optimizedPcImages.jpeg} alt={props.alt} />
-    </picture>
-  );
-
-  // return (
-  //   <picture {...parentProps}>
-  //     <source
-  //       srcSet={optimizedPcImages.avif}
-  //       media="(min-width:700px)"
-  //       type="image/avif"
-  //     />
-  //     <source
-  //       srcSet={optimizedPcImages.webp}
-  //       media="(min-width:700px)"
-  //       type="image/webp"
-  //     />
-  //     <source
-  //       srcSet={optimizedPcImages.jpeg}
-  //       media="(min-width:700px)"
-  //       type="image/jpeg"
-  //     />
-  //     <source
-  //       srcSet={optimizedSpImages.avif}
-  //       type="image/avif"
-  //     />
-  //     <source
-  //       srcSet={optimizedSpImages.avif}
-  //       type="image/webp"
-  //     />
-  //     <img src={optimizedSpImages.jpeg} alt={props.alt} />
-  //   </picture>
-  // );
+  return <PictureComponent {...props} />;
 }

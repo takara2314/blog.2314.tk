@@ -42,7 +42,6 @@ export function parseReactElement(
         <ExternalPicture
           src={block.src}
           alt={block.alt ?? undefined}
-          optimized={process.env.NODE_ENV === 'production'}
         />
       );
 
