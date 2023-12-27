@@ -1,6 +1,8 @@
+import Image from 'next/image';
 import type { ReactElement } from 'react';
 import CodeBlock from '../_components/CodeBlock';
 import { Block } from '../_models/article';
+import s3ImageLoader from './s3ImageLoader';
 
 export function parseReactElements(
   blocks: Block[],
@@ -38,7 +40,18 @@ export function parseReactElement(
 
     case 'image':
       return (
-        <img src={block.src} alt={block.alt ?? undefined} />
+        <div>
+          <div className="text-sm text-gray-500">
+            {block.src}
+          </div>
+          <Image
+            src={block.src}
+            alt={block.alt ?? ''}
+            width={150}
+            height={150}
+            loader={s3ImageLoader}
+          />
+        </div>
       );
 
     case 'unordered_list':
