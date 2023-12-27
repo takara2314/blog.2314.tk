@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 import CodeBlock from '../_components/CodeBlock';
+import ExternalPicture from '../_components/ExternalPicture';
 import { Block } from '../_models/article';
 
 export function parseReactElements(
@@ -38,7 +39,11 @@ export function parseReactElement(
 
     case 'image':
       return (
-        <img src={block.src} alt={block.alt ?? undefined} />
+        <ExternalPicture
+          src={block.src}
+          alt={block.alt ?? undefined}
+          optimized={process.env.NODE_ENV === 'production'}
+        />
       );
 
     case 'unordered_list':
