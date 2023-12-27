@@ -1,8 +1,7 @@
-import fs from 'fs';
-import minimist from 'minimist';
+const fs = require('fs');
 
 // 環境変数をコマンドラインから取得
-const vars = minimist(process.argv.slice(2));
+const vars = require('minimist')(process.argv.slice(2));
 // @ts-ignore
 // biome-ignore lint/performance/noDelete: <explanation>
 delete vars._;
@@ -14,10 +13,14 @@ for (const key of Object.keys(vars)) {
 }
 
 // 環境変数ファイルを作成
-fs.writeFile('./.env.local', content, (err) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log('The file is created successfully.');
-  }
-});
+fs.writeFile(
+  './.env.local',
+  content,
+  (err: NodeJS.ErrnoException | null) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('The file is created successfully.');
+    }
+  },
+);
