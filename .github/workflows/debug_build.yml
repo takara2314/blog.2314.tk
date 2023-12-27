@@ -21,7 +21,7 @@ jobs:
       run: >
         npx ts-node .github/createEnviron.ts
         --NOTION_TOKEN=${{ secrets.NOTION_TOKEN }}
-        --NOTION_DATABASE_ID=${{ secrets.NOTION_TOKEN }}
+        --NOTION_DATABASE_ID=${{ secrets.NOTION_DATABASE_ID }}
 
     - name: Build app for testing
       run: npm run build
