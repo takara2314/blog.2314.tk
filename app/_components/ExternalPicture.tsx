@@ -1,3 +1,4 @@
+import AsyncLock from 'async-lock';
 import optimizeExternalImage from '../_lib/optimizeExternalImage';
 
 interface Props {
@@ -5,6 +6,8 @@ interface Props {
   alt?: string;
   optimized?: boolean;
 }
+
+const lock = new AsyncLock();
 
 export default async function ExternalPicture(
   props: Props &
@@ -23,31 +26,32 @@ export default async function ExternalPicture(
     );
   }
 
-  const optimizedPcImages = await optimizeExternalImage(
-    src,
-    700,
-    80,
+  const optimizedPcImages = await lock.acquire(
+    'optimize-external-image',
+    async () => {
+      return await optimizeExternalImage(src, 700, 70);
+    },
   );
 
-  // const optimizedSpImages = await optimizeExternalImage(
-  //   src,
-  //   400,
-  //   80,
+  // const optimizedSpImages = await lock.acquire(
+  //   'optimize-external-image',
+  //   async () => {
+  //     return await optimizeExternalImage(src, 400, 70);
+  //   },
   // );
 
   return (
-    <img src={optimizedPcImages.jpeg} alt={props.alt} />
-    // <picture {...parentProps}>
-    //   <source
-    //     srcSet={optimizedPcImages.avif}
-    //     type="image/avif"
-    //   />
-    //   <source
-    //     srcSet={optimizedPcImages.webp}
-    //     type="image/webp"
-    //   />
-    //   <img src={optimizedPcImages.jpeg} alt={props.alt} />
-    // </picture>
+    <picture {...parentProps}>
+      <source
+        srcSet={optimizedPcImages.avif}
+        type="image/avif"
+      />
+      <source
+        srcSet={optimizedPcImages.avif}
+        type="image/webp"
+      />
+      <img src={optimizedPcImages.jpeg} alt={props.alt} />
+    </picture>
   );
 
   // return (
