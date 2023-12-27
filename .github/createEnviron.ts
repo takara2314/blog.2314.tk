@@ -9,6 +9,7 @@ delete vars._;
 // 環境変数ファイルに書き込む内容を作成
 let content = '';
 for (const key of Object.keys(vars)) {
+  console.log(vars[key].length);
   content += `${key}=${vars[key]}\n`;
 }
 
