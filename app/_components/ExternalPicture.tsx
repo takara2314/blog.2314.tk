@@ -36,17 +36,18 @@ export default async function ExternalPicture(
   // );
 
   return (
-    <picture {...parentProps}>
-      <source
-        srcSet={optimizedPcImages.avif}
-        type="image/avif"
-      />
-      <source
-        srcSet={optimizedPcImages.webp}
-        type="image/webp"
-      />
-      <img src={optimizedPcImages.jpeg} alt={props.alt} />
-    </picture>
+    <img src={optimizedPcImages.jpeg} alt={props.alt} />
+    // <picture {...parentProps}>
+    //   <source
+    //     srcSet={optimizedPcImages.avif}
+    //     type="image/avif"
+    //   />
+    //   <source
+    //     srcSet={optimizedPcImages.webp}
+    //     type="image/webp"
+    //   />
+    //   <img src={optimizedPcImages.jpeg} alt={props.alt} />
+    // </picture>
   );
 
   // return (
