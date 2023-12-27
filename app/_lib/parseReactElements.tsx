@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import type { ReactElement } from 'react';
+import BudouXSpan from '../_components/BudouXSpan';
 import CodeBlock from '../_components/CodeBlock';
 import ExternalPicture from '../_components/ExternalPicture';
 import { Block, Span } from '../_models/article';
@@ -129,21 +130,22 @@ export function parseReactSpanElements(
       }
 
       return (
-        <a
-          className={
-            classNames.length === 0
-              ? undefined
-              : clsx(classNames)
-          }
-          href={span.link}
-        >
-          {span.text}
+        <a href={span.link}>
+          <BudouXSpan
+            className={
+              classNames.length === 0
+                ? undefined
+                : clsx(classNames)
+            }
+          >
+            {span.text}
+          </BudouXSpan>
         </a>
       );
     }
 
     return (
-      <span
+      <BudouXSpan
         className={
           classNames.length === 0
             ? undefined
@@ -151,7 +153,7 @@ export function parseReactSpanElements(
         }
       >
         {span.text}
-      </span>
+      </BudouXSpan>
     );
   });
 }
