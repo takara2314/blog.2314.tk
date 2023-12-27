@@ -38,8 +38,15 @@ export default async function optimizeExternalImage(
     'jpeg',
   );
 
-  await fs.ensureFile(avifServerPath);
-  sharp(originalServerPath)
+  // Create directories
+  await Promise.all([
+    fs.ensureFile(avifServerPath),
+    fs.ensureFile(webpServerPath),
+    fs.ensureFile(jpegServerPath),
+  ]);
+
+  // Optimize to AVIF
+  await sharp(originalServerPath)
     .resize({
       fit: sharp.fit.contain,
       width: width,
@@ -47,8 +54,8 @@ export default async function optimizeExternalImage(
     .avif({ quality: quality })
     .toFile(avifServerPath);
 
-  await fs.ensureFile(webpServerPath);
-  sharp(originalServerPath)
+  // Optimize to WebP
+  await sharp(originalServerPath)
     .resize({
       fit: sharp.fit.contain,
       width: width,
@@ -56,8 +63,8 @@ export default async function optimizeExternalImage(
     .webp({ quality: quality })
     .toFile(webpServerPath);
 
-  await fs.ensureFile(jpegServerPath);
-  sharp(originalServerPath)
+  // Optimize to JPEG
+  await sharp(originalServerPath)
     .resize({
       fit: sharp.fit.contain,
       width: width,
