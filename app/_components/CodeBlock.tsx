@@ -7,17 +7,24 @@ interface Props {
   language: string;
 }
 
-export default function CodeBlock({
-  code,
-  language,
-}: Props) {
+export type ActualProps = Props &
+  Omit<
+    React.HTMLAttributes<HTMLElement>,
+    'code' | 'language'
+  >;
+
+export default function CodeBlock(props: ActualProps) {
+  const { code, language, ...parentProps } = props;
+
   return (
-    <CopyBlock
-      text={code}
-      language={language}
-      showLineNumbers={true}
-      theme={github}
-      codeBlock={true}
-    />
+    <div {...parentProps}>
+      <CopyBlock
+        text={code}
+        language={language}
+        showLineNumbers={true}
+        theme={github}
+        codeBlock={true}
+      />
+    </div>
   );
 }
