@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ['var(--font-inter)', 'var(--font-mplus2)'],
+        mono: ['var(--font-jetbrains-mono)'],
       },
     },
   },

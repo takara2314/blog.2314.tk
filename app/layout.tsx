@@ -1,6 +1,10 @@
 import clsx from 'clsx';
 import type { Metadata } from 'next';
-import { Inter, M_PLUS_2 } from 'next/font/google';
+import {
+  Inter,
+  JetBrains_Mono,
+  M_PLUS_2,
+} from 'next/font/google';
 import './globals.css';
 
 const inter = Inter({
@@ -11,6 +15,11 @@ const inter = Inter({
 const mplus2 = M_PLUS_2({
   subsets: ['latin'],
   variable: '--font-mplus2',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains-mono',
 });
 
 export const metadata: Metadata = {
@@ -25,7 +34,11 @@ export default function RootLayout({
 }) {
   return (
     <html
-      className={clsx(inter.variable, mplus2.variable)}
+      className={clsx(
+        inter.variable,
+        mplus2.variable,
+        jetbrainsMono.variable,
+      )}
       lang="ja"
     >
       <head>

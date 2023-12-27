@@ -1,24 +1,23 @@
 'use client';
 
-import { JetBrains_Mono } from 'next/font/google';
 import { CopyBlock, github } from 'react-code-blocks';
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-jetbrains-mono',
-});
 
 interface Props {
   code: string;
   language: string;
 }
 
-export default function CodeBlock({
-  code,
-  language,
-}: Props) {
+export type ActualProps = Props &
+  Omit<
+    React.HTMLAttributes<HTMLElement>,
+    'code' | 'language'
+  >;
+
+export default function CodeBlock(props: ActualProps) {
+  const { code, language, ...parentProps } = props;
+
   return (
-    <div className={jetbrainsMono.className}>
+    <div {...parentProps}>
       <CopyBlock
         text={code}
         language={language}
