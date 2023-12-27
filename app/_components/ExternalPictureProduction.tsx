@@ -14,7 +14,7 @@ export default async function ExternalPicture(
     ...parentProps
   } = props;
 
-  if (optimized) {
+  if (!optimized) {
     return (
       <picture {...parentProps}>
         <img src={props.src} alt={props.alt} />
