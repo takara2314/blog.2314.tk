@@ -1,11 +1,7 @@
-import { JSDOM } from 'jsdom';
+import type { HTMLProcessingParser } from 'budoux';
 
-// @ts-ignore
-global.window = new JSDOM().window;
-const loadDefaultJapaneseParser =
-  require('budoux').loadDefaultJapaneseParser;
-// @ts-ignore
-global.window = undefined;
+const loadDefaultJapaneseParser: () => HTMLProcessingParser =
+  require('budoux/dist').loadDefaultJapaneseParser;
 
 // U+200B ZERO WIDTH SPACE
 const ZWSP_CODEPOINT = 0x200b;
@@ -32,7 +28,7 @@ export default async function BudouXSpan(
   }
 
   const text = props.children as string;
-  const chunks: string[] = parser.parse(text);
+  const chunks = parser.parse(text);
 
   return <span {...parentProps}>{chunks.join(ZWSP)}</span>;
 }
