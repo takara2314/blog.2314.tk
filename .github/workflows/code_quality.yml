@@ -1,6 +1,5 @@
 name: Check quality
-on:
-  push:
+on: [ push ]
 
 jobs:
   test:
