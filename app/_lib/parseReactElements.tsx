@@ -106,7 +106,7 @@ export function parseReactElement(
         <CodeBlock
           code={block.code}
           language={block.language}
-          className="my-5 border-2 border-gray-200"
+          className="my-5 border-2 border-gray-200 font-mono"
         />
       );
 
