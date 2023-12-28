@@ -59,7 +59,7 @@ export interface Image {
   id: string;
   src: string;
   alt?: string;
-  expiryTime: cdate.CDate;
+  expiryTime?: cdate.CDate;
 }
 
 export interface UnorderedList {

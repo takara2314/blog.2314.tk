@@ -342,12 +342,27 @@ function parseHeading3(
 function parseImage(
   block: PartialBlockObjectResponse | BlockObjectResponse,
 ): Image {
+  // @ts-ignore
+  if ('external' in block.image) {
+    return {
+      type: 'image',
+      id: block.id,
+      // @ts-ignore
+      src: block.image.external.url,
+      alt:
+        // @ts-ignore
+        block.image.caption.length === 0
+          ? null
+          : // @ts-ignore
+            block.image.caption[0].plain_text,
+    };
+  }
+
   return {
     type: 'image',
     id: block.id,
     // @ts-ignore
     src: block.image.file.url,
-    // @ts-ignore
     alt:
       // @ts-ignore
       block.image.caption.length === 0
