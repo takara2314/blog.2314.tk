@@ -1,8 +1,8 @@
-name: Check quality
-on: [ push ]
+name: Lighthouse
+on: [ workflow_dispatch ]
 
 jobs:
-  test:
+  lighthouseci:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -14,7 +14,7 @@ jobs:
         node-version: 20.10.0
 
     - name: Install dependencies
-      run: npm install
+      run: npm install && npm install -g @lhci/cli@0.13.x serve@latest
 
     - name: Create .env (environment variables file)
       run: >
@@ -24,3 +24,8 @@ jobs:
 
     - name: Build app for testing
       run: npm run build
+
+    - name: Lighthouse
+      run: lhci autorun
+      env:
+        LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
