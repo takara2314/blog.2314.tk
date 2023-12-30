@@ -9,6 +9,7 @@ export interface ArticleInfo {
   publishedAt: cdate.CDate;
   updatedAt: cdate.CDate;
   published: boolean;
+  icon: Icon | null;
 }
 
 export interface Article extends ArticleInfo {
@@ -96,7 +97,7 @@ export interface Callout {
   type: 'callout';
   id: string;
   spans: Span[];
-  icon: CalloutIcon;
+  icon: Icon;
   backgroundColor: BackgroundColor;
 }
 
@@ -107,24 +108,21 @@ export interface Code {
   language: string;
 }
 
-export type CalloutIcon =
-  | CalloutIconEmoji
-  | CalloutIconExternal
-  | CalloutIconFile;
+export type Icon = IconEmoji | IconExternal | IconFile;
 
-export interface CalloutIconEmoji {
+export interface IconEmoji {
   type: 'emoji';
   emoji: string;
 }
 
-export interface CalloutIconExternal {
+export interface IconExternal {
   type: 'external';
   external: {
     url: string;
   };
 }
 
-export interface CalloutIconFile {
+export interface IconFile {
   type: 'file';
   file: {
     url: string;

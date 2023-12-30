@@ -66,6 +66,11 @@ export function parseArticleInfo(
   // @ts-ignore
   const published = page.properties.Published.checkbox;
 
+  let icon = null;
+  if ('icon' in page) {
+    icon = page.icon;
+  }
+
   return {
     id: page.id,
     title,
@@ -75,6 +80,7 @@ export function parseArticleInfo(
     publishedAt,
     updatedAt,
     published,
+    icon,
   };
 }
 
